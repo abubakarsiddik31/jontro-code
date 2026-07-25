@@ -25,6 +25,19 @@ paper, and add your own model to the evaluation**.
 | `scripts/lre_tables.py` | Renders those numbers into the paper's LaTeX tables. |
 | `scripts/lre_add_flags.py` | Attaches the validation flags to the corpus and writes the release bundle. |
 
+## Preliminary trajectory review
+
+The accompanying source distribution includes a local browser review tool at
+`scripts/validate_dataset.py`. It shows a trajectory's candidate tools, metadata,
+message trace, validation flags, user dialogue turns, and agent execution steps,
+then appends a `good`, `bad`, or `flag` label to a local JSONL file.
+
+![Jontro review panel](docs/review-tool.png)
+
+This interface supports a preliminary single-annotator sanity check and defect
+triage. It is not a substitute for a blinded, multi-annotator human-validation
+study; do not describe its labels as an independent corpus-wide quality estimate.
+
 ## What this deliberately does not contain
 
 The **generation orchestrator** — the multi-agent loop that drives the persona,
