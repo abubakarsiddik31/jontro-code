@@ -1,0 +1,28 @@
+[project]
+name = "jontro"
+version = "1.0.0"
+description = "Code for the Jontro Bangla tool-use corpus and first-call diagnostic"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Abu Bakar Siddik" }]
+requires-python = ">=3.10"
+dependencies = [
+  "pydantic>=2.0",
+  "jsonschema>=4.0",
+  "pyarrow>=14.0",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Only needed to query model endpoints; the paper's analysis runs without it.
+eval = ["openai>=1.0"]
+
+[project.urls]
+Dataset = "https://huggingface.co/datasets/abubakar-siddik/Jontro"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
