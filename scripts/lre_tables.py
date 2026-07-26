@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 A = json.loads((ROOT / "outputs/lre/analysis.json").read_text())
-OUT = ROOT / "submissions/lre/tables"
+OUT = ROOT / "submission/lre/tables"
 OUT.mkdir(parents=True, exist_ok=True)
 
 SHORT = {
