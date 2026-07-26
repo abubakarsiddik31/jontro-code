@@ -1,1 +1,1 @@
-"""Output writers: canonical JSONL, ShareGPT, and HF parquet publish."""
+"""Output writers: ShareGPT conversion of a trajectory."""

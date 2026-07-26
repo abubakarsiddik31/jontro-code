@@ -1,2 +1,1 @@
-"""Prompt templates used to generate the corpus. The orchestration code that
-calls them is not part of this bundle (see README)."""
+"""Gemini provider client and the prompt templates used to generate the corpus."""

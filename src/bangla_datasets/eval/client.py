@@ -21,6 +21,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from openai import OpenAI, RateLimitError
+from openai.types.chat import ChatCompletion
 
 from bangla_datasets.eval.task import build_chat_messages, build_tools_param
 from bangla_datasets.schema import ToolCall, Trajectory
@@ -91,7 +92,7 @@ class EvalClient:
             timeout=timeout,
         )
 
-    def _create_with_backoff(self, traj: Trajectory, **kwargs: Any):
+    def _create_with_backoff(self, traj: Trajectory, **kwargs: Any) -> ChatCompletion:
         """Call the endpoint, retrying 429s with exponential backoff."""
         backoff = INITIAL_BACKOFF
         for attempt in range(MAX_RATE_LIMIT_RETRIES + 1):

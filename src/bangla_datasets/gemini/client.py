@@ -1,6 +1,7 @@
 """Typed Gemini client: persona/user, assistant, judge. Retry + cost-capped."""
 from __future__ import annotations
 
+import base64
 import json
 import logging
 import os
@@ -189,7 +190,6 @@ class GeminiClient:
 
         tool_calls: list[ToolCall] = []
         for i, fc in enumerate(resp.function_calls or []):
-            import base64
             sig_b64 = base64.b64encode(sig_by_index[i]).decode() if i in sig_by_index else None
             # Preserve the model-assigned id when present (3.x); fall back to a
             # deterministic id for 2.x models that don't emit one.
@@ -245,8 +245,14 @@ class GeminiClient:
 
     @staticmethod
     def _history_to_contents(history: list[Message]) -> list[types.Content]:
-        import base64
-        import json as _json
+        """Remap the stored message history into google-genai ``Content`` objects.
+
+        Gemini's API differs from the stored model in two places this handles:
+        function-response parts must carry role ``"user"`` (not ``"tool"``), and
+        each function-call part may need its captured ``thought_signature``
+        replayed for Gemini 3.x models. Tool results are passed as parsed
+        objects, not double-encoded JSON strings.
+        """
         out: list[types.Content] = []
         for m in history:
             if m.role is Role.SYSTEM:
@@ -283,7 +289,7 @@ class GeminiClient:
                                 tc_name = tc.name
                                 break
                 try:
-                    result_obj = _json.loads(m.content or "{}")
+                    result_obj = json.loads(m.content or "{}")
                 except (ValueError, TypeError):
                     result_obj = {"result": m.content or ""}
                 parts.append(types.Part(function_response=types.FunctionResponse(
