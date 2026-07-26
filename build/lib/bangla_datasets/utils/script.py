@@ -28,6 +28,16 @@ def has_latin(text: str) -> bool:
     return bool(_LATIN_RE.search(text))
 
 
+def is_banglish(text: str) -> bool:
+    """Heuristic: Romanized Bangla — has Latin letters but no Bengali script.
+
+    Real Banglish turns (``ami dhaka jete chai``) are Latin-only; genuine Bangla
+    turns (``আমি ঢাকা যেতে চাই``) are Bengali-script. This distinguishes them so the
+    script-aware heuristics know which script requirement to enforce.
+    """
+    return has_latin(text) and not has_bengali(text)
+
+
 def is_ascii_identifier(name: str) -> bool:
     """True if *name* is a valid ASCII identifier (English/code layer)."""
     return bool(_ASCII_IDENT_RE.match(name))

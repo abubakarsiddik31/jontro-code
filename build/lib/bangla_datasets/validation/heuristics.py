@@ -14,7 +14,7 @@ import json
 from collections import Counter
 
 from bangla_datasets.schema import Role, Trajectory, Verdict
-from bangla_datasets.utils.script import has_bengali, has_latin, register_markers
+from bangla_datasets.utils.script import dominant_register, has_bengali, has_latin, register_markers
 
 MIN_TURN_CHARS = 3
 # Turns shorter than this are not script-checked — too short to be meaningful.

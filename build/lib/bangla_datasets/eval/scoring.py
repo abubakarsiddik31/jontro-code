@@ -87,11 +87,7 @@ def classify_error(pred: ToolCall | None, traj: Trajectory) -> str:
 def score(
     predictions: list[ToolCall | None], trajectories: list[Trajectory]
 ) -> ModelScore:
-    if len(predictions) != len(trajectories):
-        raise ValueError(
-            f"predictions and trajectories must be the same length, "
-            f"got {len(predictions)} and {len(trajectories)}"
-        )
+    assert len(predictions) == len(trajectories)
     overall = Bucket()
     by_register: dict[str, Bucket] = {}
     by_script: dict[str, Bucket] = {}

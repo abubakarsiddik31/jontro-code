@@ -41,6 +41,8 @@ _BOUNDARY_RULE_EN = (
     "stay in the user's script."
 )
 
+LANGUAGE_BOUNDARY_RULE = _BOUNDARY_RULE_BN  # backward-compat public constant
+
 
 def _boundary_rule(script: str, language: str) -> str:
     if language == "english":
@@ -200,3 +202,11 @@ def build_judge_prompt(script: str = "bengali") -> str:
         "5. coherence — মাল্টি-টার্ন প্রবাহ কি সঙ্গত, কোনো স্ববিরোধ নেই?\n\n"
         "নির্দেশ: পাস করতে হলে সব মানদণ্ডে ≥৪ প্রয়োজন। উত্তর JSON-এ দিন।"
     )
+
+
+# Brief requires a SYSTEM_PROMPTS dict produced by the gemini package.
+SYSTEM_PROMPTS = {
+    "persona": build_persona_prompt,
+    "assistant": build_assistant_prompt,
+    "judge": build_judge_prompt,
+}
