@@ -31,8 +31,8 @@ class SeedPlan:
 class _ClientLike(Protocol):
     """The generation methods the orchestrator drives.
 
-    The real ``GeminiClient`` also exposes ``judge`` (unused here). Only the two
-    generation methods are needed, so the Protocol is intentionally narrow.
+    Only the two generation methods are needed, so the Protocol is intentionally
+    narrow.
     """
 
     def persona_turn(

@@ -16,8 +16,8 @@ dependencies = [
 [project.optional-dependencies]
 # Only needed to query model endpoints; the paper's analysis runs without it.
 eval = ["openai>=1.0"]
-# Only needed to regenerate the corpus (generation orchestrator + LLM judge).
-# The orchestrator and judge import google-genai; everything else runs without it.
+# Only needed to regenerate the corpus (generation orchestrator).
+# The orchestrator imports google-genai; everything else runs without it.
 generate = ["google-genai>=1.0", "openai>=1.0"]
 
 [project.urls]

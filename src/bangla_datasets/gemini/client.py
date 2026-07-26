@@ -1,4 +1,4 @@
-"""Typed Gemini client: persona/user, assistant, judge. Retry + cost-capped."""
+"""Typed Gemini client: persona/user and assistant turns, with retry and cost caps."""
 from __future__ import annotations
 
 import base64
@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 from google import genai
 from google.genai import types
 
-from bangla_datasets.schema import JudgeScore, Message, Role, ToolCall, ToolDef, Verdict
+from bangla_datasets.schema import Message, Role, ToolCall, ToolDef
 
 _log = logging.getLogger("bangla_datasets.gemini")
 
@@ -203,45 +203,6 @@ class GeminiClient:
         text = (resp.text or "").strip()
         self._track_usage(resp, text)
         return AssistantResponse(text=text, tool_calls=tool_calls)
-
-    def judge(self, trajectory_json: str, rubric_prompt: str) -> Verdict:
-        """Score a finished trajectory. Returns a Verdict with 5 JudgeScores."""
-        self._check_budget(est_tokens=2000)
-        contents = rubric_prompt + "\n\nট্রাজেক্টরি:\n" + trajectory_json
-
-        def call() -> types.GenerateContentResponse:
-            return self._client.models.generate_content(
-                model=self._model,
-                contents=contents,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_json_schema={
-                        "type": "object",
-                        "properties": {
-                            "scores": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "dimension": {"type": "string"},
-                                        "score": {"type": "integer"},
-                                        "reason": {"type": "string"},
-                                    },
-                                    "required": ["dimension", "score", "reason"],
-                                },
-                            }
-                        },
-                        "required": ["scores"],
-                    },
-                    temperature=0.2,
-                ),
-            )
-        resp = self._with_retry(call)
-        data = json.loads(resp.text or "{}")
-        self._track_usage(resp, trajectory_json)
-        scores = [JudgeScore(**s) for s in data.get("scores", [])]
-        passed = all(s.score >= 4 for s in scores)
-        return Verdict(passed=passed, scores=scores)
 
     @staticmethod
     def _history_to_contents(history: list[Message]) -> list[types.Content]:

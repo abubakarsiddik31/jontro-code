@@ -1,7 +1,7 @@
-"""Stage 4: heuristic filters (pure Python).
+"""Stage 3: heuristic filters (pure Python).
 
-Cheap pre-filters run before the expensive Gemini judge: turn-length sanity,
-repeated identical tool calls, and script-mix detection.
+Cheap pre-filters: turn-length sanity, repeated identical tool calls, and
+script-mix detection.
 
 The script check is *persona.script-aware*: a ``bengali`` trajectory must have
 Bengali-script conversation turns; a ``banglish`` trajectory must have Latin

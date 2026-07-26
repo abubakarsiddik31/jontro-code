@@ -18,18 +18,14 @@ scratch**.
 | `src/bangla_datasets/tools/simulators.py` | The deterministic simulators. Every tool result in the corpus is recomputable byte-for-byte from its stored seed with these. |
 | `src/bangla_datasets/tools/registry.py` | Tool lookup, simulator dispatch, and domain-subset selection. |
 | `src/bangla_datasets/validation/` | The three deterministic gates whose pass rates are reported in the paper: schema, consistency (simulator replay), heuristics. |
-| `src/bangla_datasets/validation/judge.py` | The LLM judge stage. **Never ran on the released corpus** (§4.3 of the paper): it is included for completeness and is exercised only by its own unit tests against a fake client. |
 | `src/bangla_datasets/utils/seeding.py` | Reproducible seed derivation and the seeded RNG used throughout generation and sampling. |
-| `src/bangla_datasets/utils/checkpoint.py` | Crash-safe checkpointing for resumable generation runs. |
-| `src/bangla_datasets/utils/logging.py` | Run-scoped structured (JSONL) logging. |
 | `src/bangla_datasets/utils/script.py` | Bangla script and address-form marker detection. Section 3.2.1 of the paper analyses this module's behaviour directly. |
 | `src/bangla_datasets/eval/` | The evaluation harness: prompt construction, the endpoint client, and scoring. Use this to add a model. |
 | `src/bangla_datasets/splits/` | Partitioning and Parquet I/O for both released splits. |
-| `src/bangla_datasets/gemini/prompts.py` | The prompt templates used to generate the corpus, including the persona, address-form and judge-rubric text. |
-| `src/bangla_datasets/gemini/client.py` | The typed Gemini provider client: persona/user, assistant, judge, and register-classification calls. Reads its API key from the `GEMINI_API_KEY`/`GOOGLE_API_KEY` environment variable; no key is stored in this repository. |
+| `src/bangla_datasets/gemini/prompts.py` | The prompt templates used to generate the corpus: persona, address-form, and assistant-role system prompts. |
+| `src/bangla_datasets/gemini/client.py` | The typed Gemini provider client for the persona/user and assistant turns. Reads its API key from the `GEMINI_API_KEY`/`GOOGLE_API_KEY` environment variable; no key is stored in this repository. |
 | `src/bangla_datasets/generation/orchestrator.py` | The self-play turn-protocol state machine that drives the persona, user and assistant roles and intercepts tool calls for simulator execution. |
 | `src/bangla_datasets/generation/seeds.py` | The seed sampler: reads the recipe and expands task goals across persona axes, domains and tool subsets. |
-| `src/bangla_datasets/generation/coverage.py` | Coverage-aware sampling that biases away from over-represented tool combinations. |
 | `recipes/agentic_v1.yaml` | The generation recipe: domain weights, persona axes, goal templates. |
 | `scripts/lre_analysis.py` | Produces every number in the paper. Offline, no network. |
 | `scripts/lre_tables.py` | Renders those numbers into the paper's LaTeX tables. |
@@ -51,17 +47,14 @@ study; do not describe its labels as an independent corpus-wide quality estimate
 ## What is and is not exercised
 
 The full construction pipeline is released: the seed sampler, the provider client,
-the turn-protocol orchestrator, the checkpoint manager, the simulators, the three
-deterministic validation gates, and the LLM judge. With a Gemini API key you can
-regenerate or extend the corpus from `recipes/agentic_v1.yaml`.
+the turn-protocol orchestrator, the simulators, and the three deterministic
+validation gates. With a Gemini API key you can regenerate or extend the corpus
+from `recipes/agentic_v1.yaml`.
 
-One component is released but was **never run on the corpus that was published**:
-the LLM judge (`validation/judge.py`). The released corpus carries no judge
-verdicts — the judge gate was designed but not executed on the 9,158 released
-trajectories (§4.3 of the paper states this). It is included here for completeness
-and because its rubric text is part of the method, and it is covered by unit tests
-against a fake client. Nothing in the paper's reported results depends on a judge
-score.
+Validation is deterministic only: schema, simulator-replay consistency, and
+heuristics. The corpus was not filtered by an LLM judge and carries no judge
+verdicts; every reported number is recomputable offline from the released code
+and data.
 
 ## Reproducing the paper
 

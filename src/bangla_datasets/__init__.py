@@ -28,7 +28,6 @@ from bangla_datasets.splits.partition import partition
 from bangla_datasets.tools.registry import ToolRegistry
 from bangla_datasets.validation.consistency import check_consistency
 from bangla_datasets.validation.heuristics import run_heuristics
-from bangla_datasets.validation.judge import run_judge
 from bangla_datasets.validation.schema_check import check_schema
 from bangla_datasets.writers.sharegpt import to_sharegpt
 
@@ -53,7 +52,6 @@ __all__ = [
     "check_consistency",
     "check_schema",
     "run_heuristics",
-    "run_judge",
     # eval
     "EvalClient",
     "score",
