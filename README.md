@@ -31,19 +31,6 @@ scratch**.
 | `scripts/lre_tables.py` | Renders those numbers into the paper's LaTeX tables. |
 | `scripts/lre_add_flags.py` | Attaches the validation flags to the corpus and writes the release bundle. |
 
-## Preliminary trajectory review
-
-The accompanying source distribution includes a local browser review tool at
-`scripts/validate_dataset.py`. It shows a trajectory's candidate tools, metadata,
-message trace, validation flags, user dialogue turns, and agent execution steps,
-then appends a `good`, `bad`, or `flag` label to a local JSONL file.
-
-![Jontro review panel](docs/review-tool.png)
-
-This interface supports a preliminary single-annotator sanity check and defect
-triage. It is not a substitute for a blinded, multi-annotator human-validation
-study; do not describe its labels as an independent corpus-wide quality estimate.
-
 ## What is and is not exercised
 
 The full construction pipeline is released: the seed sampler, the provider client,
@@ -58,22 +45,24 @@ and data.
 
 ## Reproducing the paper
 
-Everything runs offline against the public corpus. No model calls, no API keys.
+The analysis runs offline after downloading the public release artifacts. No model
+calls or API keys are required.
 
 ```bash
 pip install -e .
 
-# fetch the corpus into outputs/dataset/ and outputs/splits/,
-# and the raw predictions into outputs/eval/ (both from the data deposit)
+# Download the release artifacts and place them under the paths consumed by the
+# scripts, or adapt the paths in your local invocation. The exact public layout is
+# documented in the dataset card.
 
 python scripts/lre_analysis.py    # -> outputs/lre/analysis.json, outputs/splits_v2/
 python scripts/lre_tables.py      # -> the paper's LaTeX tables
 python scripts/lre_add_flags.py   # -> outputs/release_v2/ with validation flags
 ```
 
-`lre_tables.py` regenerates every data table in the paper. They are generated
-rather than transcribed, so a mismatch between the paper and the corpus is
-detectable by running this.
+`lre_tables.py` regenerates every data table in the paper after its documented
+input artifacts are available locally. The tables are generated rather than
+transcribed, so a mismatch between the paper and the corpus is detectable.
 
 ## Regenerating the corpus
 
